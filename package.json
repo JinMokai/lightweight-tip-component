@@ -1,6 +1,6 @@
 {
   "name": "lightweight-tip-component",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "A lightweight tooltip component built with Web Components, zero dependencies, small bundle size and easy to use.",
   "type": "module",
   "main": "dist/lightweight-tip-component.umd.js",

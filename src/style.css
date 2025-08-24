@@ -1,0 +1,12 @@
+:host {
+    display: contents;
+}
+.tip-web-component {
+    all: inherit;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    word-break: break-all;
+    overflow: hidden;
+    display: block;
+    position: relative;
+}

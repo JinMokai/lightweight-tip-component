@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tip Web Component Demo</title>
+</head>
+<style>
+  :not(:defined) {
+    display: none;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+  }
+
+  h1 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 10px;
+    font-size: 2.5em;
+  }
+
+  .subtitle {
+    text-align: center;
+    color: #7f8c8d;
+    margin-bottom: 40px;
+    font-size: 1.1em;
+  }
+
+  .demo-section {
+    margin-bottom: 40px;
+    padding: 30px;
+    border: 2px solid #ecf0f1;
+    border-radius: 8px;
+    background: #fafafa;
+  }
+
+  .demo-title {
+    font-size: 1.4em;
+    color: #34495e;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 8px;
+  }
+
+  .demo-description {
+    color: #7f8c8d;
+    margin-bottom: 20px;
+    font-style: italic;
+  }
+
+  .demo-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: center;
+  }
+
+  .tip-item {
+    padding: 12px 20px;
+    background: #3498db;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    font-size: 14px;
+  }
+
+  .tip-item:hover {
+    background: #2980b9;
+    transform: translateY(-2px);
+  }
+
+  .constrained-width {
+    width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .inline-demo {
+    line-height: 2;
+  }
+
+  .table-demo {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+
+  .table-demo th,
+  .table-demo td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .table-demo th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+  }
+
+  .code-block {
+    background: #2c3e50;
+    color: #ecf0f1;
+    padding: 20px;
+    border-radius: 6px;
+    font-family: 'Courier New', monospace;
+    margin-top: 20px;
+    overflow-x: auto;
+  }
+
+  @media (max-width: 768px) {
+    .container {
+      padding: 20px;
+    }
+    
+    .demo-content {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  }
+</style>
+
+<body>
+  <div class="container">
+    <h1>🎯 Tip Web Component</h1>
+    <p class="subtitle">一个轻量级的提示组件，支持文本溢出时自动显示完整内容</p>
+
+    <!-- 基础示例 -->
+    <div class="demo-section">
+      <h2 class="demo-title">📝 基础示例</h2>
+      <p class="demo-description">鼠标悬停在文本上查看提示效果</p>
+      <div class="demo-content">
+        <jk-tip class="tip-item">
+          短文本
+        </jk-tip>
+        <jk-tip class="tip-item">
+          这是一段比较长的文本内容，用来演示提示功能
+        </jk-tip>
+      </div>
+    </div>
+
+    <!-- 宽度受限示例 -->
+    <div class="demo-section">
+      <h2 class="demo-title">📏 宽度受限场景</h2>
+      <p class="demo-description">当容器宽度受限时，文本会被截断并显示省略号，悬停可查看完整内容</p>
+      <div class="demo-content">
+        <jk-tip class="tip-item constrained-width">
+          这是一段很长很长的文本内容
+        </jk-tip>
+        <jk-tip class="tip-item constrained-width">
+          超长的产品名称或描述信息
+        </jk-tip>
+        <jk-tip class="tip-item constrained-width">
+          ID: 1234567890ABCDEFGHIJK
+        </jk-tip>
+      </div>
+    </div>
+
+    <!-- 行内文本示例 -->
+    <div class="demo-section">
+      <h2 class="demo-title">📄 行内文本示例</h2>
+      <p class="demo-description">在段落中使用提示组件</p>
+      <div class="inline-demo">
+        <p>这是一个包含 <jk-tip style="color: #e74c3c; font-weight: bold;">重要提示信息的内容，鼠标悬停可以查看详细说明</jk-tip> 的段落文本。</p>
+        <p>用户名：<jk-tip style="background: #f39c12; color: white; padding: 2px 6px; border-radius: 3px;">admin@example.com</jk-tip></p>
+      </div>
+    </div>
+
+    <!-- 表格示例 -->
+    <div class="demo-section">
+      <h2 class="demo-title">📊 表格场景应用</h2>
+      <p class="demo-description">在表格中处理长文本内容</p>
+      <table class="table-demo">
+        <thead>
+          <tr>
+            <th>产品名称</th>
+            <th>描述</th>
+            <th>状态</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <jk-tip class="constrained-width">
+                高性能Web组件开发框架
+              </jk-tip>
+            </td>
+            <td>
+              <jk-tip class="constrained-width">
+                这是一个功能强大的现代化Web组件开发框架，支持多种特性和功能
+              </jk-tip>
+            </td>
+            <td>
+              <jk-tip style="color: #27ae60; font-weight: bold;">
+                运行中
+              </jk-tip>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <jk-tip class="constrained-width">
+                数据可视化组件库
+              </jk-tip>
+            </td>
+            <td>
+              <jk-tip class="constrained-width">
+                提供丰富的图表和数据展示组件，支持自定义主题和交互效果
+              </jk-tip>
+            </td>
+            <td>
+              <jk-tip style="color: #f39c12; font-weight: bold;">
+                开发中
+              </jk-tip>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 使用说明 -->
+    <div class="demo-section">
+      <h2 class="demo-title">💡 使用说明</h2>
+      <p class="demo-description">简单易用的API</p>
+      <div class="code-block">
+&lt;!-- 基础用法 --&gt;
+&lt;jk-tip&gt;你的文本内容&lt;/jk-tip&gt;
+
+&lt;!-- 带样式 --&gt;
+&lt;jk-tip class="your-class" style="your-style"&gt;
+  长文本内容...
+&lt;/jk-tip&gt;
+      </div>
+      <ul style="margin-top: 20px; padding-left: 20px;">
+        <li>✅ 自动检测文本是否溢出</li>
+        <li>✅ 智能显示/隐藏提示</li>
+        <li>✅ 支持鼠标悬停交互</li>
+        <li>✅ 轻量级，无依赖</li>
+        <li>✅ 完全可定制样式</li>
+      </ul>
+    </div>
+  </div>
+
+  <script type="module" src="./src/main.js"></script>
+</body>
+
+</html>

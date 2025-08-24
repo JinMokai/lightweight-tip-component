@@ -1,6 +1,8 @@
 
 import BaseWebComponent from "./base.js";
 import PopWebComponent from "./pop/index.js";
+// utils
+import isSupportAbortController from "./utils/isSupportAbortController.js";
 
 import style from './style.css?inline' assert { type: 'css' };
 
@@ -14,6 +16,10 @@ export class TipWebComponent extends BaseWebComponent {
   #tipEl = null;
   // 隐藏延迟定时器
   #hideTimer = null;
+  // 默认的全局abort
+  #abortSignal = null;
+  // 提示的abort
+  #abortTipSignal = null;
 
   constructor() {
     super();
@@ -40,16 +46,50 @@ export class TipWebComponent extends BaseWebComponent {
       dir: "top,bottom,left,right",
       trigger: ['hover', 'focus'],
     });
-    
+
     this.#addTipEvents();
   }
 
   /**
-   * @description 初始化tip
+   * @description 初始化事件监听
    */
   #initAddEvent() {
-    this.addEventListener('mouseenter', this.#mouseEnterHandler);
-    this.addEventListener('mouseleave', this.#mouseLeaveHandler);
+    this.#setupEventListeners(this, [
+      { event: 'mouseenter', handler: this.#mouseEnterHandler },
+      { event: 'mouseleave', handler: this.#mouseLeaveHandler }
+    ], 'main');
+  }
+
+  /**
+   * @description 统一的事件监听器设置方法
+   * @param {EventTarget} target - 事件目标
+   * @param {Array} events - 事件配置数组
+   * @param {string} type - 事件类型标识（'main' | 'tip'）
+   */
+  #setupEventListeners(target, events, type = 'main') {
+    if (!target || !events.length) return;
+
+    // 清理已存在的AbortController
+    const signalProperty = type === 'main' ? '#abortSignal' : '#abortTipSignal';
+    if (this[signalProperty]) {
+      this[signalProperty].abort();
+    }
+
+    if (isSupportAbortController()) {
+      const abortController = new AbortController();
+      this[signalProperty] = abortController.signal;
+
+      events.forEach(({ event, handler }) => {
+        target.addEventListener(event, handler, {
+          signal: this[signalProperty]
+        });
+      });
+    } else {
+      // 向后兼容：传统事件监听方式
+      events.forEach(({ event, handler }) => {
+        target.addEventListener(event, handler);
+      });
+    }
   }
 
   renderHtml() {
@@ -63,12 +103,36 @@ export class TipWebComponent extends BaseWebComponent {
 
 
   disconnectedCallback() {
-    this.removeEventListener('mouseenter', this.#mouseEnterHandler);
-    this.removeEventListener('mouseleave', this.#mouseLeaveHandler);
+    this.#cleanup();
+  }
+
+  /**
+   * @description 统一的清理方法
+   */
+  #cleanup() {
+    if (this.#abortSignal) {
+      this.#abortSignal.abort();
+    } else if (!isSupportAbortController()) {
+      this.removeEventListener('mouseenter', this.#mouseEnterHandler);
+      this.removeEventListener('mouseleave', this.#mouseLeaveHandler);
+    }
+
+    if (this.#abortTipSignal) {
+      this.#abortTipSignal.abort();
+    } else if (!isSupportAbortController() && this.#tipEl) {
+      this.#tipEl.removeEventListener('mouseenter', this.#tipsEnterHandler);
+      this.#tipEl.removeEventListener('mouseleave', this.#tipsLeaveHandler);
+    }
+
+    // 清理定时器
     if (this.#hideTimer) {
       clearTimeout(this.#hideTimer);
       this.#hideTimer = null;
     }
+
+    // 重置引用
+    this.#abortSignal = null;
+    this.#abortTipSignal = null;
     this.#tipEl = null;
   }
 
@@ -86,7 +150,7 @@ export class TipWebComponent extends BaseWebComponent {
     if (event.relatedTarget && event.relatedTarget?.nodeName.includes('JK-')) {
       return;
     }
-    
+
     this.#isInBox = false;
     this.#hideTimer = setTimeout(() => {
       this.hideTip();
@@ -110,20 +174,30 @@ export class TipWebComponent extends BaseWebComponent {
    */
   #addTipEvents() {
     if (!this.#tipEl) return;
-    
-    this.#tipEl.addEventListener('mouseenter', () => {
-      if (this.#hideTimer) {
-        clearTimeout(this.#hideTimer);
-        this.#hideTimer = null;
-      }
-    });
-    
-    this.#tipEl.addEventListener('mouseleave', () => {
-      this.#hideTimer = setTimeout(() => {
-        this.hideTip();
-        this.#hideTimer = null;
-      }, 100);
-    });
+
+    this.#setupEventListeners(this.#tipEl, [
+      { event: 'mouseenter', handler: this.#tipsEnterHandler },
+      { event: 'mouseleave', handler: this.#tipsLeaveHandler }
+    ], 'tip');
+  }
+
+  /**
+   * @description 提示框鼠标进入事件
+   */
+  #tipsEnterHandler = () => {
+    if (this.#hideTimer) {
+      clearTimeout(this.#hideTimer);
+      this.#hideTimer = null;
+    }
+  }
+  /**
+   * @description 提示框鼠标离开事件
+   */
+  #tipsLeaveHandler = () => {
+    this.#hideTimer = setTimeout(() => {
+      this.hideTip();
+      this.#hideTimer = null;
+    }, 100);
   }
 
   /**

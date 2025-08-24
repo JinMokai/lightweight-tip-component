@@ -1,12 +1,49 @@
 {
-  "name": "vanilla-tip-webcomponent",
-  "private": true,
-  "version": "0.0.0",
+  "name": "lightweight-tip-component",
+  "version": "0.0.1",
+  "description": "A lightweight tooltip component built with Web Components, zero dependencies, small bundle size and easy to use.",
   "type": "module",
+  "main": "dist/lightweight-tip-component.umd.js",
+  "module": "dist/lightweight-tip-component.es.js",
+  "exports": {
+    ".": {
+      "import": "./dist/lightweight-tip-component.es.js",
+      "require": "./dist/lightweight-tip-component.umd.js"
+    }
+  },
+  "files": [
+    "dist",
+    "src",
+    "README.md"
+  ],
+  "keywords": [
+    "tooltip",
+    "web-components",
+    "lightweight",
+    "vanilla-js",
+    "zero-dependencies",
+    "tip-component"
+  ],
+  "author": {
+    "name": "JinMokai",
+    "url": "https://github.com/JinMokai"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JinMokai/lightweight-tip-component.git"
+  },
+  "homepage": "https://github.com/JinMokai/lightweight-tip-component#readme",
+  "bugs": {
+    "url": "https://github.com/JinMokai/lightweight-tip-component/issues"
+  },
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "build": "vite build --mode lib",
+    "preview": "vite preview",
+    "prepublishOnly": "npm run build",
+    "demo:preview": "vite preview --mode demo",
+    "demo:build": "vite build --mode demo"
   },
   "devDependencies": {
     "vite": "^7.1.2"

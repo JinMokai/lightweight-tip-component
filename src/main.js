@@ -43,7 +43,7 @@ export class TipWebComponent extends BaseWebComponent {
     const getWebComponentEl = this.shadowRoot.querySelector('.tip-web-component');
     this.#tipEl = new PopWebComponent().init(getWebComponentEl, {
       tips: this.getFullTextContent(),
-      dir: "top,bottom,left,right",
+      dir: "top,bottom",
       trigger: ['hover', 'focus'],
     });
 

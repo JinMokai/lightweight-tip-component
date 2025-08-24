@@ -1,0 +1,48 @@
+# This workflow will run tests using node and then publish a package to GitHub Packages when a release is created
+# For more information see: https://docs.github.com/en/actions/publishing-packages/publishing-nodejs-packages
+
+name: Publish Package
+
+on:
+  push:
+    branches:
+      - master 
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '20'
+        registry-url: 'https://registry.npmjs.org/'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build package
+      run: npm run build
+
+    - name: Run tests
+      run: npm test
+      
+    - name: Set up Git config
+      run: |
+        git config --global user.email "ch_kaijack@outlook.com"
+        git config --global user.name "jinkai"
+        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/JinMokai/lightweight-tip-component.git
+    
+    - name: Update package version
+      run: |
+        npm version patch -m "ci: bump version to %s"
+        git push
+
+    - name: Publish package
+      run: npm publish
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

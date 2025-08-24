@@ -34,14 +34,18 @@ pnpm add lightweight-tip-component
     <title>Tooltip Demo</title>
 </head>
 <body>
-    <button data-tip="This is a tooltip">Hover me</button>
-    
+    <!-- use in html -->
+    <jk-tip>This is a long text, and a hint will be automatically displayed when the container width is insufficient.</jk-tip>
+    <script type="importmap">
+    {
+        "imports": {
+        "lightweight-tip-component": "./node_modules/lightweight-tip-component/dist/lightweight-tip-component.es.js"
+        }
+    }
+    </script>
     <script type="module">
-        import { TipWebComponent } from './dist/lightweight-tip-component.es.js';
-        
-        // Initialize tooltip
-        const tip = new TipWebComponent();
-        tip.init();
+        import TipWebComponent from 'lightweight-tip-component';
+        TipWebComponent.define('my-tips');
     </script>
 </body>
 </html>
@@ -50,18 +54,14 @@ pnpm add lightweight-tip-component
 ### Module Usage
 
 ```javascript
-import { TipWebComponent } from 'lightweight-tip-component';
+import TipWebComponent from 'lightweight-tip-component';
 
-// Create tooltip instance
-const tip = new TipWebComponent({
-    // Configuration options
-    theme: 'dark',
-    position: 'top',
-    delay: 200
-});
+// Or import a specific class
+import TipWebComponent from 'lightweight-tip-component';
 
-// Initialize
-tip.init();
+// The component is automatically registered as a <jk-tip> tag
+// Or manually register as a custom tag name
+TipWebComponent.define('my-tip');
 ```
 
 ## 📖 Usage Examples
@@ -69,31 +69,15 @@ tip.init();
 ### Basic Tooltip
 
 ```html
-<span data-tip="This is a basic tooltip">Basic tooltip</span>
+<jk-tip>Normal text tip</jk-tip>
 ```
 
 ### Custom Position
 
 ```html
-<span data-tip="Top tooltip" data-tip-position="top">Top</span>
-<span data-tip="Bottom tooltip" data-tip-position="bottom">Bottom</span>
-<span data-tip="Left tooltip" data-tip-position="left">Left</span>
-<span data-tip="Right tooltip" data-tip-position="right">Right</span>
-```
-
-### Custom Theme
-
-```html
-<span data-tip="Dark theme tooltip" data-tip-theme="dark">Dark theme</span>
-<span data-tip="Light theme tooltip" data-tip-theme="light">Light theme</span>
-```
-
-### Dynamic Content
-
-```javascript
-// Update tooltip content dynamically
-const element = document.querySelector('[data-tip]');
-element.setAttribute('data-tip', 'New tooltip content');
+<div style="width: 200px;">
+  <jk-tip>This is a long text, when the container width is insufficient, the full content will be automatically displayed.</jk-tip>
+</div>
 ```
 
 ## 🛠 Development
@@ -102,7 +86,7 @@ element.setAttribute('data-tip', 'New tooltip content');
 
 ```bash
 # Clone the repository
-git clone <repository-url>
+git clone https://github.com/JinMokai/lightweight-tip-component.git
 cd lightweight-tip-component
 
 # Install dependencies
@@ -118,15 +102,12 @@ pnpm run dev
 # Build library
 pnpm run build
 
-# Build demo
-pnpm run build:demo
 ```
 
 ### Preview
 
 ```bash
-# Preview demo
-pnpm run demo:preview
+pnpm run preview
 ```
 
 ## 🤝 Contributing
@@ -144,6 +125,7 @@ Contributions are welcome! Please follow these steps:
 If you have any questions or suggestions, feel free to contact us:
 
 - GitHub: [https://github.com/your-username/lightweight-tip-component](https://github.com/your-username/lightweight-tip-component)
+- Issues: [GitHub Issues](https://github.com/JinMokai/lightweight-tip-component/issues)
 
 ## 🙏 Acknowledgments
 

@@ -110,6 +110,12 @@ pnpm run build
 pnpm run preview
 ```
 
+## next
+
+- [ ] add custom style
+- [ ] add custom event
+- [ ] add custom position
+
 ## 🤝 Contributing
 
 Contributions are welcome! Please follow these steps:

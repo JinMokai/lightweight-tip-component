@@ -39,8 +39,12 @@ export default class TipWebComponent extends BaseWebComponent {
     this.initTip()
   }
 
+  getTipWebComponentEl() {
+    return this.shadowRoot.querySelector('.tip-web-component');
+  }
+
   initTip() {
-    const getWebComponentEl = this.shadowRoot.querySelector('.tip-web-component');
+    const getWebComponentEl = this.getTipWebComponentEl();
     this.#tipEl = new PopWebComponent().init(getWebComponentEl, {
       tips: this.getFullTextContent(),
       dir: "top,bottom",
@@ -219,38 +223,14 @@ export default class TipWebComponent extends BaseWebComponent {
    * @description 刷新提示
    */
   flush() {
-    if (parseInt(this.getDefaultSlotWidth()) > parseInt(this.getDefaultParentNodeWidth())) {
+    const getWebComponentEl = this.getTipWebComponentEl();
+    if (
+      getWebComponentEl.scrollWidth > getWebComponentEl.clientWidth
+    ) {
       this.#isHidden = true;
     } else {
       this.#isHidden = false;
     }
-  }
-
-  /**
-   * @description 获取插槽文本的宽度
-   * @returns {number}
-   */
-  getDefaultSlotWidth() {
-    const assignedNodes = this.getDefaultSlot().assignedNodes();
-    let totalWidth = 0;
-
-    assignedNodes.forEach(node => {
-      if (node.nodeType === Node.ELEMENT_NODE) {
-        const rect = node.getBoundingClientRect();
-        totalWidth += rect.width;
-      } else if (node.nodeType === Node.TEXT_NODE) {
-        const span = document.createElement('span');
-        span.style.visibility = 'hidden';
-        span.style.position = 'absolute';
-        span.textContent = node.textContent;
-        document.body.appendChild(span);
-        const textWidth = span.getBoundingClientRect().width;
-        totalWidth += textWidth;
-        document.body.removeChild(span);
-      }
-    });
-
-    return totalWidth;
   }
 
   /**

@@ -11,7 +11,6 @@ export default defineConfig(({ command, mode }) => {
           name: 'LightweightTipComponent',
           fileName: (format) => `lightweight-tip-component.${format}.js`,
           formats: ['es', 'umd', 'iife'],
-          exports: 'named'
         },
         rollupOptions: {
           external: [],

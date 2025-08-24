@@ -3,7 +3,6 @@
 
 <head>
   <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tip Web Component Demo</title>
 </head>
@@ -266,7 +265,10 @@
     </div>
   </div>
 
-  <script type="module" src="./src/main.js"></script>
+  <script type="module">
+    import TipWebComponent from './src/main.js';
+    TipWebComponent.define('jk-tip');
+  </script>
 </body>
 
 </html>

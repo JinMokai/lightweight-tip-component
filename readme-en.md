@@ -2,8 +2,6 @@
 
 A lightweight tooltip component that can be used in any web project.
 
-> **Language**: [English](./readme.md) | [中文](./readme-zh.md)
-
 ## ✨ Features
 
 - 🚀 **Lightweight**: Small bundle size, no external dependencies

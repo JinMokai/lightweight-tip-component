@@ -6,7 +6,7 @@ import isSupportAbortController from "./utils/isSupportAbortController.js";
 
 import style from './style.css?inline' assert { type: 'css' };
 
-export class TipWebComponent extends BaseWebComponent {
+export default class TipWebComponent extends BaseWebComponent {
 
   // 当前文本在父元素中是否隐藏
   #isHidden = false;
@@ -267,7 +267,6 @@ export class TipWebComponent extends BaseWebComponent {
   }
 }
 
-
-if (window.customElements.get('jk-tip') === undefined) {
-  TipWebComponent.define('jk-tip');
-}
+// if (window.customElements.get('jk-tip') === undefined) {
+//   TipWebComponent.define('jk-tip');
+// }
